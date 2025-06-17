@@ -13,6 +13,7 @@ from urllib.request import urlopen
 
 from lxml.etree import XMLSchema
 
+from osgeo import gdal
 from pywps import xml_util as etree
 from pywps.inout.formats import FORMATS
 from pywps.validator.mode import MODE
@@ -315,7 +316,7 @@ def validateshapefile(data_input, mode):
 def validategeotiff(data_input, mode):
     """GeoTIFF validation example."""
 
-    LOGGER.info('Validating Shapefile; Mode: {}'.format(mode))
+    LOGGER.info('Validating GeoTIFF; Mode: {}'.format(mode))
     passed = False
 
     if mode >= MODE.NONE:
@@ -329,13 +330,8 @@ def validategeotiff(data_input, mode):
 
     if mode >= MODE.STRICT:
 
-        try:
-            from geotiff import GeoTiff
-
-            data_source = GeoTiff(data_input.file)
-            passed = (data_source.crs_code > 0)
-        except (ModuleNotFoundError, ImportError):
-            passed = False
+        data_source = gdal.OpenEx(data_input.file, gdal.OF_RASTER)
+        passed = data_source is not None
 
     return passed
 
