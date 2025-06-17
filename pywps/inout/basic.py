@@ -867,6 +867,8 @@ class LiteralInput(BasicIO, BasicLiteral, SimpleHandler):
                     self.values_reference = value
                     break
             self.allowed_values = make_allowedvalues(allowed_values)
+        else:
+            self.any_value = True
 
         self._default = default
         self._default_type = default_type
