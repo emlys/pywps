@@ -2,6 +2,7 @@
 # Copyright 2018 Open Source Geospatial Foundation and others    #
 # licensed under MIT, Please consult LICENSE.txt for details     #
 ##################################################################
+import multiprocessing
 import os
 
 from pywps.processing.job import Job
@@ -29,8 +30,8 @@ class MultiProcessing(Processing):
     """
 
     def start(self):
-        import multiprocessing
-        process = multiprocessing.Process(
+        mp = multiprocessing.get_context(method='fork')
+        process = mp.Process(
             target=getattr(self.job.process, self.job.method),
             args=(self.job.wps_request, self.job.wps_response)
         )
